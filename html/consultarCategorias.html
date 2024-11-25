@@ -1,0 +1,548 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Consultar Categorías</title>
+    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../css/menu.css">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+    <style>
+        /* Personalización para la tabla */
+        #tablaCategorias_wrapper {
+            margin: 20px 0;
+        }
+
+        #tablaCategorias {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #tablaCategorias thead {
+            background-color: #4723D9;
+            color: #ffffff;
+        }
+
+        #tablaCategorias thead th {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #tablaCategorias tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        #tablaCategorias tbody tr:hover {
+            background-color: #dce0f6d1;
+        }
+
+        #tablaCategorias .btn {
+            margin: 0 2px;
+        }
+
+        /* Botones de DataTables */
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 6px 12px;
+            margin: 0 2px;
+            border-radius: 4px;
+            background-color: #6c757d;
+            color: white !important;
+            border: none;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background-color: #495057;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background-color: #ced4da;
+            color: white;
+        }
+
+        .dataTables_wrapper .dataTables_filter input {
+            border-radius: 20px;
+            border: 1px solid #ced4da;
+            padding: 5px 10px;
+        }
+
+        /* Estilo general del modal */
+        .modal-content {
+            border-radius: 15px;
+            /* Bordes redondeados */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            /* Sombra suave */
+            border: none;
+            /* Quitar bordes */
+        }
+
+        /* Eliminar fondo gris */
+        .modal-backdrop {
+            display: none !important;
+        }
+
+        /* Centrar modal completamente */
+        .modal-dialog {
+            margin: auto;
+        }
+
+        /* Personalizar el header */
+        .modal-header {
+            background-color: #4723D9;
+            /* Color principal */
+            color: white;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        /* Estilo del botón de cerrar */
+        .btn-close {
+            filter: invert(1);
+            /* Cambiar color del icono de cerrar */
+        }
+
+        /* Campos del formulario */
+        .form-label {
+            font-weight: 600;
+        }
+
+        /* Botones en el footer */
+        .modal-footer .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+        }
+
+        .modal-footer .btn-primary {
+            background-color: #4723D9;
+            border: none;
+        }
+
+        .modal-footer .btn-primary:hover {
+            background-color: #5a34e0;
+        }
+    </style>
+
+
+
+</head>
+
+<body id="body-pd">
+    <header class="header" id="header">
+        <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
+    </header>
+    <div class="l-navbar" id="nav-bar">
+        <nav class="nav">
+            <div>
+                <a href="#" class="nav_logo">
+                    <i class="bx bx-layer nav_logo-icon"></i>
+                    <span class="nav_logo-name">ContraTiks</span>
+                </a>
+                <div class="nav_list">
+                    <!-- Dropdown para Contratos -->
+                    <div class="nav-item dropdown">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownContratos" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-folder nav_icon'></i><span class="nav_name">Contratos</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownContratos">
+                            <li><a class="dropdown-item" href="#">Agregar</a></li>
+                            <li><a class="dropdown-item" href="#">Consultar</a></li>
+                            <li><a class="dropdown-item" href="#">Actualizar</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Dropdown para Usuarios -->
+                    <div class="nav-item dropdown">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownUsuarios" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-user nav_icon'></i><span class="nav_name">Usuarios</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownPerfil">
+                            <li><a class="dropdown-item" href="#">Agregar</a></li>
+                            <li><a class="dropdown-item" href="#">Consultar</a></li>
+                            <li><a class="dropdown-item" href="#">Actualizar</a></li>
+                        </ul>
+                    </div>
+                    <!-- Dropdown para Categorias -->
+                    <div class="nav-item dropdown">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownCategorias" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-grid-alt nav_icon'></i> <span class="nav_name">Categorias</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownCategorias">
+                            <li><a class="dropdown-item" href="#">Agregar</a></li>
+                            <li><a class="dropdown-item" href="#">Consultar</a></li>
+                            <li><a class="dropdown-item" href="#">Actualizar</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Dropdown para Clientes -->
+                    <div class="nav-item dropdown">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownClientes" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-bar-chart-alt-2 nav_icon'></i> <span class="nav_name">Clientes</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownClientes">
+                            <li><a class="dropdown-item" href="#">Agregar</a></li>
+                            <li><a class="dropdown-item" href="#">Consultar</a></li>
+                            <li><a class="dropdown-item" href="#">Actualizar</a></li>
+                        </ul>
+                    </div>
+                    <!-- Perfil y Cerrar sesión -->
+                    <div class="nav-item dropdown nav-profile">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownUser1" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-wink-smile nav_icon'></i> <span class="nav_name">Perfil</span>
+                        </a>
+                        <ul class="dropdown-menu aria-labelledby=" dropdownUser1">
+                            <li><a class="dropdown-item" href="#">Perfil</a></li>
+                            <li><a class="dropdown-item" href="#">Cambiar contraseña</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="bg-light">
+        <div class="container mt-5">
+            <h1 class="text-center">Consultar Categorías</h1>
+            <div class="mb-3">
+                <label for="buscarActivas" class="form-label">Mostrar solo categorías activas:</label>
+                <input type="checkbox" id="buscarActivas">
+            </div>
+            <table id="tablaCategorias" class="display table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="categoriasBody">
+                    <!-- Filas dinámicas llenadas con DataTables -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal para Actualizar Categoría -->
+    <div class="modal" id="modalActualizarCategoria" tabindex="-1" aria-labelledby="modalActualizarCategoriaLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalActualizarCategoriaLabel">Actualizar Categoría</h5>
+                    <button type="button" id="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formActualizarCategoria">
+                        <div class="mb-3">
+                            <label for="categoriaNombre" class="form-label fw-bold">Nombre de la Categoría</label>
+                            <input type="text" class="form-control" id="categoriaNombre"
+                                placeholder="Escribe el nombre de la categoría" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="categoriaDescripcion" class="form-label fw-bold">Descripción</label>
+                            <textarea class="form-control" id="categoriaDescripcion" rows="3"
+                                placeholder="Escribe una descripción" required></textarea>
+                        </div>
+                        <input type="hidden" id="categoriaId">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="submitButton">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- Bootstrap JS -->
+    <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js'></script>
+
+    <!-- jQuery -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script type='text/javascript'>
+        //PARA EL MENÚ DESPLEGABLE
+        document.addEventListener("DOMContentLoaded", function (event) {
+
+            const showNavbar = (toggleId, navId, bodyId, headerId) => {
+                const toggle = document.getElementById(toggleId),
+                    nav = document.getElementById(navId),
+                    bodypd = document.getElementById(bodyId),
+                    headerpd = document.getElementById(headerId)
+
+                // Validate that all variables exist
+                if (toggle && nav && bodypd && headerpd) {
+                    toggle.addEventListener('click', () => {
+                        // show navbar
+                        nav.classList.toggle('show')
+                        // change icon
+                        toggle.classList.toggle('bx-x')
+                        // add padding to body
+                        bodypd.classList.toggle('body-pd')
+                        // add padding to header
+                        headerpd.classList.toggle('body-pd')
+                    })
+                }
+            }
+
+            showNavbar('header-toggle', 'nav-bar', 'body-pd', 'header')
+
+            /*===== LINK ACTIVE =====*/
+            const linkColor = document.querySelectorAll('.nav_link')
+
+            function colorLink() {
+                if (linkColor) {
+                    linkColor.forEach(l => l.classList.remove('active'))
+                    this.classList.add('active')
+                }
+            }
+            linkColor.forEach(l => l.addEventListener('click', colorLink))
+
+            // Your code to run since DOM is loaded and ready
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            const tabla = $('#tablaCategorias').DataTable({
+                pageLength: 6, // Mostrar 6 filas inicialmente
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json' // Traduccir a español
+                }
+            });
+
+            // Función para cargar datos en la tabla
+            function cargarCategorias(url) {
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error al realizar la solicitud: ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Datos obtenidos:', data);
+                        if (data.result && Array.isArray(data.result)) {
+                            tabla.clear(); // Limpiar la tabla
+                            data.result.forEach((categoria, index) => {
+                                tabla.row.add([
+                                    index + 1,
+                                    categoria.nombre,
+                                    categoria.descripcion,
+                                    categoria.status ? 'Activo' : 'Inactivo',
+                                    `<button class="btn btn-primary editar" data-id="${categoria.id}" data-nombre="${categoria.nombre}" data-descripcion="${categoria.descripcion}">
+                                    <i class='bx bx-edit'></i>
+                                </button>
+                                <button class="btn btn-secondary cambiar-status" data-id="${categoria.id}">
+                                    <i class='bx bx-refresh'></i>
+                                </button>`
+                                ]).draw();
+                            });
+                        } else {
+                            throw new Error('Formato de datos no válido');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+
+            // Cargar todas las categorías al inicio
+            cargarCategorias('http://localhost:8080/categoria/all');
+
+            // Evento para filtrar solo categorías activas
+            $('#buscarActivas').on('change', function () {
+                if (this.checked) {
+                    // Llamar al endpoint para categorías activas
+                    cargarCategorias('http://localhost:8080/categoria/actives');
+                } else {
+                    // Llamar al endpoint para todas las categorías
+                    cargarCategorias('http://localhost:8080/categoria/all');
+                }
+            });
+
+            // Eventos de botones Editar y Eliminar
+            // Evento para editar categoría
+            $('#tablaCategorias tbody').on('click', '.editar', function () {
+                const id = $(this).data('id');
+
+                // Realizar una solicitud para obtener los datos de la categoría 
+                fetch(`http://localhost:8080/categoria/categorias/${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data) {
+                            //obtener datos 
+                            var id = this.getAttribute("data-id");
+                            var nombre = this.getAttribute("data-nombre");
+                            var descripcion = this.getAttribute("data-descripcion");
+                            // Rellenar los campos del formulario en el modal
+                            document.getElementById('categoriaDescripcion').value = descripcion;
+                            document.getElementById('categoriaNombre').value = nombre;
+                            document.getElementById('categoriaId').value = id;
+                            // Mostrar el modal
+                            //$('#modalActualizarCategoria').modal('show');
+
+                            const modal = document.getElementById('modalActualizarCategoria');
+
+                            // Añade las clases necesarias para mostrar el modal
+                            //modal.classList.add('show');
+                            modal.style.display = 'block';
+                            modal.removeAttribute('aria-hidden');
+                            modal.setAttribute('aria-modal', 'true');
+
+                            // Añadir backdrop manualmente si es necesario
+                            const backdrop = document.createElement('div');
+                            backdrop.className = 'modal-backdrop fade show';
+                            document.body.appendChild(backdrop);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al obtener la categoría:', error);
+                    });
+            });
+            // Guardar cambios cuando se hace clic en el botón "Guardar cambios"
+            $('#submitButton').on('click', function () {
+                const form = $('#formActualizarCategoria');
+                const id = $('#categoriaId').val();
+                const nombre = $('#categoriaNombre').val();
+                const descripcion = $('#categoriaDescripcion').val();
+
+                // Enviar los datos al servidor
+                fetch(`http://localhost:8080/categoria/update`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: id,
+                        nombre: nombre,
+                        descripcion: descripcion
+                    })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error al actualizar la categoría');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Categoría actualizada:', data);
+                        // Actualiza la tabla o recarga la lista de categorías
+                        cargarCategorias('http://localhost:8080/categoria/all');
+                        // Cierra el modal
+                        //$('#modalActualizarCategoria').modal('hide');
+                        const modal = document.getElementById('modalActualizarCategoria');
+
+                        // Añade las clases necesarias para mostrar el modal
+                        //modal.classList.add('show');
+                        modal.style.display = 'hiden';
+                        modal.setAttribute('aria-hidden');
+                        //modal.setAttribute('aria-modal', 'true');
+                    })
+                    .catch(error => {
+                        console.error('Error al actualizar la categoría:', error);
+                    });
+
+
+            });
+
+
+
+            $('#tablaCategorias tbody').on('click', '.cambiar-status', function () {
+                const id = $(this).data('id');
+                // Obtener el estado actual (puedes ajustar esto según cómo obtengas el estado)
+                const estadoActual = $(this).data('estado'); // Ejemplo: atributo data-estado para el estado actual
+
+                // Determinar el nuevo estado basado en el estado actual
+                const nuevoEstado = estadoActual === 'activo' ? false : true;
+                fetch(`http://localhost:8080/categoria/change-status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: id,
+                        status: nuevoEstado
+                    })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error al actualizar la categoría');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Categoría actualizada:', data);
+                        // Actualiza la tabla o recarga la lista de categorías
+                        cargarCategorias('http://localhost:8080/categoria/all');
+                        // Cierra el modal
+                        //$('#modalActualizarCategoria').modal('hide');
+                        const modal = document.getElementById('modalActualizarCategoria');
+
+                        // Añade las clases necesarias para mostrar el modal
+                        //modal.classList.add('show');
+                        modal.style.display = 'hiden';
+                        modal.setAttribute('aria-hidden');
+                    })
+                    .catch(error => {
+                        console.error('Error al actualizar la categoría:', error);
+                    });
+            });
+
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona el modal
+            const modalElement = document.getElementById('modalActualizarCategoria');
+            const modalInstance = new bootstrap.Modal(modalElement);
+
+            // Vincula los botones de cierre manualmente
+            const closeButtons = document.querySelectorAll('#modalActualizarCategoria [data-bs-dismiss="modal"]');
+
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const modal = document.getElementById('modalActualizarCategoria');
+
+                        // Añade las clases necesarias para mostrar el modal
+                        //modal.classList.add('show');
+                        modal.style.display = 'hiden';
+                        modal.setAttribute('aria-hidden');
+                });
+            });
+        });
+
+
+
+    </script>
+    <script type='text/javascript'>var myLink = document.querySelector('a[href="#"]');
+        myLink.addEventListener('click', function (e) {
+            e.preventDefault();
+        });</script>
+</body>
+
+</html>
