@@ -1,16 +1,19 @@
- // Función para mostrar u ocultar la contraseña
- function togglePassword() {
-    const passwordField = document.getElementById('password');
-    const eyeIcon = document.getElementById('togglePassword');
+// Función para mostrar u ocultar la contraseña
+function togglePassword(id) {
+    const passwordField = document.getElementById(id);
+    const toggleIcon = document.getElementById('toggle' + capitalizeFirstLetter(id));
 
-    // Cambiar el tipo de input entre 'password' y 'text'
-    if (passwordField.type === 'password') {
-        passwordField.type = 'text';
-        eyeIcon.classList.remove('fa-eye-slash');
-        eyeIcon.classList.add('fa-eye');
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
     } else {
-        passwordField.type = 'password';
-        eyeIcon.classList.remove('fa-eye');
-        eyeIcon.classList.add('fa-eye-slash');
+        passwordField.type = "password";
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
     }
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
