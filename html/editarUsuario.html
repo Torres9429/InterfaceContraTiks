@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuario</title>
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>ContraTiks</h1>
+            <h2>Editar Usuario</h2>
+            <form action="#" method="POST">
+                <!-- Campo: Nombre -->
+                <div class="form-element">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Juan" value="Juan" required>
+                </div>
+                <!-- Campo: Apellidos -->
+                <div class="form-element">
+                    <label for="apellidos">Apellidos</label>
+                    <input type="text" id="apellidos" name="apellidos" placeholder="Perez" value="Perez" required>
+                </div>
+                <!-- Campo: Teléfono -->
+                <div class="form-element">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono" placeholder="7774602719" value="7774602719" required>
+                </div>
+                <!-- Campo: Correo -->
+                <div class="form-element">
+                    <label for="correo">Correo</label>
+                    <input type="email" id="correo" name="correo" placeholder="juan.perez@example.com" value="juan.perez@example.com" required>
+                </div>
+                <!-- Campo: Contraseña -->
+                <div class="form-element password-container">
+                    <label for="contrasena">Nueva Contraseña</label>
+                    <div style="position: relative;">
+                        <input type="password" id="contrasena" name="contrasena" placeholder="Dejar en blanco si no deseas cambiarla">
+                        <i class="eye" onclick="togglePassword()">👁️</i>
+                    </div>
+                </div>
+                <!-- Botón de Guardar Cambios -->
+                <button type="submit" class="btn">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Función para mostrar/ocultar contraseña
+        function togglePassword() {
+            const passwordInput = document.getElementById('contrasena');
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+        }
+    </script>
+</body>
+</html>

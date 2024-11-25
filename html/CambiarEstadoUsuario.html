@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambiar Estado de Usuario</title>
+    <link rel="stylesheet" href="../css/login.css"> <!-- Reutilización del CSS -->
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>ContraTiks</h1>
+            <h2>Cambiar Estado de Usuario</h2>
+            <form action="#" method="POST">
+                <!-- Campo: ID del Usuario -->
+                <div class="form-element">
+                    <label for="idUsuario">ID del Usuario</label>
+                    <input type="number" id="idUsuario" name="idUsuario" placeholder="Ingrese el ID del usuario" required>
+                </div>
+                <!-- Campo: Nuevo Estado -->
+                <div class="form-element">
+                    <label for="estado">Nuevo Estado</label>
+                    <select id="estado" name="estado" required>
+                        <option value="" disabled selected>Seleccione un estado</option>
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                    </select>
+                </div>
+                <!-- Botón de Cambiar Estado -->
+                <button type="submit" class="btn">Cambiar Estado</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
