@@ -71,44 +71,86 @@
             padding: 5px 10px;
         }
 
-        /* Estilo general del modal */
-        .modal-content {
-            border-radius: 15px;
-            /* Bordes redondeados */
+        /* Estilos para el modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            /* Mantener oculto el modal por defecto */
+            justify-content: center;
+            align-items: center;
+            z-index: 1050;
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            /* Sombra suave */
-            border: none;
-            /* Quitar bordes */
+            animation: fadeIn 0.3s ease-in-out;
         }
 
-        /* Eliminar fondo gris */
-        .modal-backdrop {
-            display: none !important;
-        }
-
-        /* Centrar modal completamente */
-        .modal-dialog {
-            margin: auto;
-        }
-
-        /* Personalizar el header */
         .modal-header {
             background-color: #4723D9;
-            /* Color principal */
             color: white;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
+            padding: 15px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        /* Estilo del botón de cerrar */
-        .btn-close {
-            filter: invert(1);
-            /* Cambiar color del icono de cerrar */
+        .modal-header .btn-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
-        /* Campos del formulario */
-        .form-label {
-            font-weight: 600;
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .modal-footer .btn {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #4723D9;
+            color: white;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Botones en el footer */
@@ -237,42 +279,36 @@
             </table>
         </div>
     </div>
-
-    <!-- Modal para Actualizar Categoría -->
-    <div class="modal" id="modalActualizarCategoria" tabindex="-1" aria-labelledby="modalActualizarCategoriaLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalActualizarCategoriaLabel">Actualizar Categoría</h5>
-                    <button type="button" id="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formActualizarCategoria">
-                        <div class="mb-3">
-                            <label for="categoriaNombre" class="form-label fw-bold">Nombre de la Categoría</label>
-                            <input type="text" class="form-control" id="categoriaNombre"
-                                placeholder="Escribe el nombre de la categoría" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="categoriaDescripcion" class="form-label fw-bold">Descripción</label>
-                            <textarea class="form-control" id="categoriaDescripcion" rows="3"
-                                placeholder="Escribe una descripción" required></textarea>
-                        </div>
-                        <input type="hidden" id="categoriaId">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="submitButton">Guardar cambios</button>
-                </div>
+    <!-- Mensaje de éxito o error -->
+    <div id="alerta" class="alert mt-3" role="alert" style="display: none;"></div>
+    <!-- Modal para actualizar categoría -->
+    <div id="nuevoModalActualizarCategoria" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h5 class="modal-title">Actualizar Categoría</h5>
+                <button type="button" class="btn-close" id="cerrarNuevoModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="nuevoFormActualizarCategoria">
+                    <div class="mb-3">
+                        <label for="nuevoCategoriaNombre" class="form-label fw-bold">Nombre de la Categoría</label>
+                        <input type="text" class="form-control" id="nuevoCategoriaNombre"
+                            placeholder="Escribe el nombre de la categoría" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nuevoCategoriaDescripcion" class="form-label fw-bold">Descripción</label>
+                        <textarea class="form-control" id="nuevoCategoriaDescripcion" rows="3"
+                            placeholder="Escribe una descripción" required></textarea>
+                    </div>
+                    <input type="hidden" id="nuevoCategoriaId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cerrarNuevoModalFooter">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="guardarNuevoCambios">Guardar cambios</button>
             </div>
         </div>
     </div>
-
-
-
-
 
     <!-- Bootstrap JS -->
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js'></script>
@@ -282,8 +318,8 @@
 
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-    <script type='text/javascript'>
-        //PARA EL MENÚ DESPLEGABLE
+
+    <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function (event) {
 
             const showNavbar = (toggleId, navId, bodyId, headerId) => {
@@ -322,34 +358,20 @@
 
             // Your code to run since DOM is loaded and ready
         });
-    </script>
-    <script type="text/javascript">
         $(document).ready(function () {
             const tabla = $('#tablaCategorias').DataTable({
-                pageLength: 6, // Mostrar 6 filas inicialmente
+                pageLength: 6,
                 language: {
-                    url: 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json' // Traduccir a español
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
                 }
             });
 
-            // Función para cargar datos en la tabla
             function cargarCategorias(url) {
-                fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Error al realizar la solicitud: ' + response.statusText);
-                        }
-                        return response.json();
-                    })
+                fetch(url, { method: 'GET' })
+                    .then(response => response.json())
                     .then(data => {
-                        console.log('Datos obtenidos:', data);
                         if (data.result && Array.isArray(data.result)) {
-                            tabla.clear(); // Limpiar la tabla
+                            tabla.clear();
                             data.result.forEach((categoria, index) => {
                                 tabla.row.add([
                                     index + 1,
@@ -364,123 +386,22 @@
                                 </button>`
                                 ]).draw();
                             });
-                        } else {
-                            throw new Error('Formato de datos no válido');
                         }
                     })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
+                    .catch(console.error);
             }
 
-            // Cargar todas las categorías al inicio
             cargarCategorias('http://localhost:8080/categoria/all');
 
-            // Evento para filtrar solo categorías activas
             $('#buscarActivas').on('change', function () {
-                if (this.checked) {
-                    // Llamar al endpoint para categorías activas
-                    cargarCategorias('http://localhost:8080/categoria/actives');
-                } else {
-                    // Llamar al endpoint para todas las categorías
-                    cargarCategorias('http://localhost:8080/categoria/all');
-                }
+                cargarCategorias(this.checked ? 'http://localhost:8080/categoria/actives' : 'http://localhost:8080/categoria/all');
             });
-
-            // Eventos de botones Editar y Eliminar
-            // Evento para editar categoría
-            $('#tablaCategorias tbody').on('click', '.editar', function () {
-                const id = $(this).data('id');
-
-                // Realizar una solicitud para obtener los datos de la categoría 
-                fetch(`http://localhost:8080/categoria/categorias/${id}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data) {
-                            //obtener datos 
-                            var id = this.getAttribute("data-id");
-                            var nombre = this.getAttribute("data-nombre");
-                            var descripcion = this.getAttribute("data-descripcion");
-                            // Rellenar los campos del formulario en el modal
-                            document.getElementById('categoriaDescripcion').value = descripcion;
-                            document.getElementById('categoriaNombre').value = nombre;
-                            document.getElementById('categoriaId').value = id;
-                            // Mostrar el modal
-                            //$('#modalActualizarCategoria').modal('show');
-
-                            const modal = document.getElementById('modalActualizarCategoria');
-
-                            // Añade las clases necesarias para mostrar el modal
-                            //modal.classList.add('show');
-                            modal.style.display = 'block';
-                            modal.removeAttribute('aria-hidden');
-                            modal.setAttribute('aria-modal', 'true');
-
-                            // Añadir backdrop manualmente si es necesario
-                            const backdrop = document.createElement('div');
-                            backdrop.className = 'modal-backdrop fade show';
-                            document.body.appendChild(backdrop);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error al obtener la categoría:', error);
-                    });
-            });
-            // Guardar cambios cuando se hace clic en el botón "Guardar cambios"
-            $('#submitButton').on('click', function () {
-                const form = $('#formActualizarCategoria');
-                const id = $('#categoriaId').val();
-                const nombre = $('#categoriaNombre').val();
-                const descripcion = $('#categoriaDescripcion').val();
-
-                // Enviar los datos al servidor
-                fetch(`http://localhost:8080/categoria/update`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        id: id,
-                        nombre: nombre,
-                        descripcion: descripcion
-                    })
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Error al actualizar la categoría');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Categoría actualizada:', data);
-                        // Actualiza la tabla o recarga la lista de categorías
-                        cargarCategorias('http://localhost:8080/categoria/all');
-                        // Cierra el modal
-                        //$('#modalActualizarCategoria').modal('hide');
-                        const modal = document.getElementById('modalActualizarCategoria');
-
-                        // Añade las clases necesarias para mostrar el modal
-                        //modal.classList.add('show');
-                        modal.style.display = 'hiden';
-                        modal.setAttribute('aria-hidden');
-                        //modal.setAttribute('aria-modal', 'true');
-                    })
-                    .catch(error => {
-                        console.error('Error al actualizar la categoría:', error);
-                    });
-
-
-            });
-
-
 
             $('#tablaCategorias tbody').on('click', '.cambiar-status', function () {
                 const id = $(this).data('id');
-                // Obtener el estado actual (puedes ajustar esto según cómo obtengas el estado)
-                const estadoActual = $(this).data('estado'); // Ejemplo: atributo data-estado para el estado actual
-
-                // Determinar el nuevo estado basado en el estado actual
+                const estadoActual = $(this).data('estado'); // Obtener el estado actual
                 const nuevoEstado = estadoActual === 'activo' ? false : true;
+
                 fetch(`http://localhost:8080/categoria/change-status`, {
                     method: 'PUT',
                     headers: {
@@ -491,54 +412,129 @@
                         status: nuevoEstado
                     })
                 })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Error al actualizar la categoría');
-                        }
-                        return response.json();
-                    })
+                    .then(response => response.json())
                     .then(data => {
-                        console.log('Categoría actualizada:', data);
+                        const alerta = document.getElementById("alerta");
+
+                        if (data.type === "SUCCESS") {
+                            alerta.textContent = "Estado de la categoría actualizado correctamente.";
+                            alerta.className = "alert alert-success";
+                        } else {
+                            alerta.textContent = "Error al cambiar el estado de la categoría: " + (data.message || "Error desconocido.");
+                            alerta.className = "alert alert-danger";
+                        }
+
+                        // Muestra la alerta
+                        alerta.style.display = "block";
+
+                        // Oculta la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
+
                         // Actualiza la tabla o recarga la lista de categorías
                         cargarCategorias('http://localhost:8080/categoria/all');
-                        // Cierra el modal
-                        //$('#modalActualizarCategoria').modal('hide');
-                        const modal = document.getElementById('modalActualizarCategoria');
-
-                        // Añade las clases necesarias para mostrar el modal
-                        //modal.classList.add('show');
-                        modal.style.display = 'hiden';
-                        modal.setAttribute('aria-hidden');
                     })
                     .catch(error => {
-                        console.error('Error al actualizar la categoría:', error);
+                        console.error('Error al cambiar el estado de la categoría:', error);
+                        const alerta = document.getElementById("alerta");
+                        alerta.textContent = "Hubo un error al procesar tu solicitud.";
+                        alerta.className = "alert alert-danger";
+                        alerta.style.display = "block";
+
+                        // Oculta la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
                     });
             });
 
-        });
-        document.addEventListener('DOMContentLoaded', function () {
-            // Selecciona el modal
-            const modalElement = document.getElementById('modalActualizarCategoria');
-            const modalInstance = new bootstrap.Modal(modalElement);
 
-            // Vincula los botones de cierre manualmente
-            const closeButtons = document.querySelectorAll('#modalActualizarCategoria [data-bs-dismiss="modal"]');
+            const nuevoModal = document.getElementById("nuevoModalActualizarCategoria");
+            const cerrarBotones = [
+                document.getElementById("cerrarNuevoModal"),
+                document.getElementById("cerrarNuevoModalFooter")
+            ];
+            const abrirModal = () => {
+                nuevoModal.style.display = "flex";
+            };
 
-            closeButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const modal = document.getElementById('modalActualizarCategoria');
+            const cerrarModal = () => {
+                nuevoModal.style.display = "none";
+            };
 
-                        // Añade las clases necesarias para mostrar el modal
-                        //modal.classList.add('show');
-                        modal.style.display = 'hiden';
-                        modal.setAttribute('aria-hidden');
-                });
+            cerrarBotones.forEach(btn => btn.addEventListener("click", cerrarModal));
+
+            document.getElementById("guardarNuevoCambios").addEventListener("click", function () {
+                const id = document.getElementById("nuevoCategoriaId").value;
+                const nombre = document.getElementById("nuevoCategoriaNombre").value;
+                const descripcion = document.getElementById("nuevoCategoriaDescripcion").value;
+
+                fetch('http://localhost:8080/categoria/update', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, nombre, descripcion })
+                })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Error al actualizar la categoría');
+                        return response.json();
+                    })
+                    .then(data => {
+                        const alerta = document.getElementById("alerta");
+
+                        if (data.type === "SUCCESS") {
+                            alerta.textContent = "Categoría actualizada exitosamente.";
+                            alerta.className = "alert alert-success";
+                        } else {
+                            alerta.textContent = "Error al actualizar la categoría: " + (data.message || "Error desconocido.");
+                            alerta.className = "alert alert-danger";
+                        }
+
+                        // Muestra la alerta
+                        alerta.style.display = "block";
+
+                        // Oculta la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
+                        console.log('Categoría actualizada:', data);
+                        // Actualiza la tabla o recarga la lista de categorías
+                        cargarCategorias('http://localhost:8080/categoria/all');
+                        cerrarModal();
+
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        const alerta = document.getElementById("alerta");
+                        alerta.textContent = "Hubo un error al procesar tu solicitud.";
+                        alerta.className = "alert alert-danger";
+                        alerta.style.display = "block";
+
+                        // Oculta la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
+                    });
+            });
+
+            // apertura del modal con los datos
+            document.getElementById("tablaCategorias").addEventListener("click", function (e) {
+                if (e.target.closest(".editar")) {
+                    const button = e.target.closest(".editar");
+                    const id = button.getAttribute("data-id");
+                    const nombre = button.getAttribute("data-nombre");
+                    const descripcion = button.getAttribute("data-descripcion");
+
+                    document.getElementById("nuevoCategoriaId").value = id;
+                    document.getElementById("nuevoCategoriaNombre").value = nombre;
+                    document.getElementById("nuevoCategoriaDescripcion").value = descripcion;
+
+                    abrirModal();
+                }
             });
         });
-
-
-
     </script>
+
     <script type='text/javascript'>var myLink = document.querySelector('a[href="#"]');
         myLink.addEventListener('click', function (e) {
             e.preventDefault();
