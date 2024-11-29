@@ -461,7 +461,7 @@
                 const id = $(this).data('id');
                 const nombre = $(this).data('nombre'); // Asegúrate de que estos atributos estén presentes en tu botón
                 const descripcion = $(this).data('descripcion');
-                const fechaVencimiento = $(this).data('fechavencimiento');
+                const fechaVencimiento = new Date($(this).data('fechavencimiento')).toISOString().split('T')[0];
                 const clienteId = $(this).data('clienteid');
                 const categoriaId = $(this).data('categoriaid');
                 const nuevoEstado = $(this).data('estado') === 'activo' ? false : true;
@@ -483,46 +483,55 @@
                     },
                     body: JSON.stringify({
                         id: id,
+                        nombre: nombre,
+                        descripcion: descripcion,
+                        fechaVencimiento: fechaVencimiento,
+                        clienteId: clienteId,
+                        categoriaId: categoriaId,
                         status: nuevoEstado
                     })
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        const alerta = document.getElementById("alerta");
-
-                        if (data.type === "SUCCESS") {
-                            alerta.textContent = "Estado del contrato actualizado correctamente.";
-                            alerta.className = "alert alert-success";
-                        } else {
-                            alerta.textContent = "Error al cambiar el estado del contrato: " + (data.message || "Error desconocido.");
-                            alerta.className = "alert alert-danger";
+                .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error en la solicitud: ' + response.statusText);
                         }
-
-                        // Muestra la alerta
-                        alerta.style.display = "block";
-
-                        // Oculta la alerta después de 5 segundos
-                        setTimeout(() => {
-                            alerta.style.display = "none";
-                        }, 5000);
-
-                        // Actualiza la tabla o recarga la lista de categorías
-                        cargarContratos('http://localhost:8080/contratos/all');
+                        return response.json();
                     })
-                    .catch(error => {
-                        console.error('Error al cambiar el estado del contrato:', error);
-                        const alerta = document.getElementById("alerta");
-                        alerta.textContent = "Hubo un error al procesar tu solicitud.";
+                .then(data => {
+                    const alerta = document.getElementById("alerta");
+
+                    if (data.type === "SUCCESS") {
+                        alerta.textContent = "Estado del contrato actualizado correctamente.";
+                        alerta.className = "alert alert-success";
+                    } else {
+                        alerta.textContent = "Error al cambiar el estado del contrato: " + (data.message || "Error desconocido.");
                         alerta.className = "alert alert-danger";
-                        alerta.style.display = "block";
+                    }
 
-                        // Oculta la alerta después de 5 segundos
-                        setTimeout(() => {
-                            alerta.style.display = "none";
-                        }, 5000);
-                    });
+                    // Muestra la alerta
+                    alerta.style.display = "block";
+
+                    // Oculta la alerta después de 5 segundos
+                    setTimeout(() => {
+                        alerta.style.display = "none";
+                    }, 5000);
+
+                    // Actualiza la tabla o recarga la lista de categorías
+                    cargarContratos('http://localhost:8080/contratos/all');
+                })
+                .catch(error => {
+                    console.error('Error al cambiar el estado del contrato:', error);
+                    const alerta = document.getElementById("alerta");
+                    alerta.textContent = "Hubo un error al procesar tu solicitud.";
+                    alerta.className = "alert alert-danger";
+                    alerta.style.display = "block";
+
+                    // Oculta la alerta después de 5 segundos
+                    setTimeout(() => {
+                        alerta.style.display = "none";
+                    }, 5000);
+                });
             });
-
 
             const nuevoModal = document.getElementById("nuevoModalActualizarCategoria");
             const cerrarBotones = [
@@ -552,46 +561,46 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id, nombre, descripcion, fechaVencimiento, clienteId, categoriaId})
                 })
-                    .then(response => {
-                        if (!response.ok) throw new Error('Error al actualizar el contrato');
-                        return response.json();
-                    })
-                    .then(data => {
-                        const alerta = document.getElementById("alerta");
+                .then(response => {
+                    if (!response.ok) throw new Error('Error al actualizar el contrato');
+                    return response.json();
+                })
+                .then(data => {
+                    const alerta = document.getElementById("alerta");
 
-                        if (data.type === "SUCCESS") {
-                            alerta.textContent = "Contrato actualizado exitosamente.";
-                            alerta.className = "alert alert-success";
-                        } else {
-                            alerta.textContent = "Error al actualizar el contrato: " + (data.message || "Error desconocido.");
-                            alerta.className = "alert alert-danger";
-                        }
-
-                        // Muestra la alerta
-                        alerta.style.display = "block";
-
-                        // Oculta la alerta después de 5 segundos
-                        setTimeout(() => {
-                            alerta.style.display = "none";
-                        }, 5000);
-                        console.log('Contrato actualizado:', data);
-                        // Actualiza la tabla o recarga la lista de categorías
-                        cargarContratos('http://localhost:8080/contratos/all');
-                        cerrarModal();
-
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        const alerta = document.getElementById("alerta");
-                        alerta.textContent = "Hubo un error al procesar tu solicitud.";
+                    if (data.type === "SUCCESS") {
+                        alerta.textContent = "Contrato actualizado exitosamente.";
+                        alerta.className = "alert alert-success";
+                    } else {
+                        alerta.textContent = "Error al actualizar el contrato: " + (data.message || "Error desconocido.");
                         alerta.className = "alert alert-danger";
-                        alerta.style.display = "block";
+                    }
 
-                        // Oculta la alerta después de 5 segundos
-                        setTimeout(() => {
-                            alerta.style.display = "none";
-                        }, 5000);
-                    });
+                    // Muestra la alerta
+                    alerta.style.display = "block";
+
+                    // Oculta la alerta después de 5 segundos
+                    setTimeout(() => {
+                        alerta.style.display = "none";
+                    }, 5000);
+                    console.log('Contrato actualizado:', data);
+                    // Actualiza la tabla o recarga la lista de categorías
+                    cargarContratos('http://localhost:8080/contratos/all');
+                    cerrarModal();
+
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    const alerta = document.getElementById("alerta");
+                    alerta.textContent = "Hubo un error al procesar tu solicitud.";
+                    alerta.className = "alert alert-danger";
+                    alerta.style.display = "block";
+
+                    // Oculta la alerta después de 5 segundos
+                    setTimeout(() => {
+                        alerta.style.display = "none";
+                    }, 5000);
+                });
             });
 
             // apertura del modal con los datos
