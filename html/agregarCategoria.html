@@ -100,12 +100,12 @@
                     <div class="mb-3">
                         <label for="nombreCategoria" class="form-label">Nombre de la categoría</label>
                         <input type="text" class="form-control" id="nombreCategoria"
-                            placeholder="Escribe el nombre de la categoría">
+                            placeholder="Escribe el nombre de la categoría" maxlength="30" required>
                     </div>
                     <div class="mb-3">
                         <label for="descripcionCategoria" class="form-label">Descripción</label>
                         <textarea class="form-control" id="descripcionCategoria" rows="3"
-                            placeholder="Escribe una descripción" maxlength="70"></textarea>
+                            placeholder="Escribe una descripción" maxlength="70" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Agregar categoría</button>
                 </form>
@@ -197,7 +197,8 @@
                             alerta.textContent = "Error al agregar la categoría: " + (data.message || "Error desconocido.");
                             alerta.className = "alert alert-danger";
                         }
-
+                        document.getElementById("nombreCategoria").value = "";
+                        document.getElementById("descripcionCategoria").value = "";
                         // Muestra la alerta
                         alerta.style.display = "block";
 

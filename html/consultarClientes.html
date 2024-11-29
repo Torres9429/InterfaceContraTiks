@@ -407,7 +407,7 @@
             cargarClientes('http://localhost:8080/clientes/all');
 
             $('#buscarActivas').on('change', function () {
-                cargarClientes(this.checked ? 'http://localhost:8080/clientes/actives' : 'http://localhost:8080/clientes/all');
+                cargarClientes(this.checked ? 'http://localhost:8080/clientes/status' : 'http://localhost:8080/clientes/all');
             });
 
             $('#tablaClientes tbody').on('click', '.cambiar-status', function () {
