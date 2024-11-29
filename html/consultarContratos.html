@@ -8,6 +8,10 @@
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css' rel='stylesheet'>
     <link href='https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../css/menu.css">
+    <!-- Bootstrap Datepicker CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
@@ -284,8 +288,8 @@
     </div>
     <!-- Mensaje de éxito o error -->
     <div id="alerta" class="alert mt-3" role="alert" style="display: none;"></div>
-    <!-- Modal para actualizar categoría -->
-    <div id="nuevoFormActualizarCategoria" class="modal-overlay">
+    <!-- Modal para actualizar contrato -->
+    <div id="nuevoModalActualizarCategoria" class="modal-overlay">
         <div class="modal-container">
             <div class="modal-header">
                 <h5 class="modal-title">Actualizar Contrato</h5>
@@ -304,21 +308,23 @@
                             placeholder="Escribe una descripción" required></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="nuevoContratoDescripcion" class="form-label fw-bold">Fecha de Vencimiento</label> <!-- CHECAR QUE SALGA UN CALENDARIO AL CAMBIAR LA FECHA-->
-                        <textarea class="form-control" id="nuevoContratoDescripcion" rows="3"
-                            placeholder="Elije una fecha de vencimiento" required></textarea>
-                    </div>
+                        <label for="nuevoContratoFechaVencimiento" class="form-label">Fecha de vencimiento del contrato</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker" id="nuevoContratoFechaVencimiento" placeholder="Selecciona una fecha">
+                            <span class="input-group-text"><i class="bi bi-calendar"></i></span> <!-- Icono de calendario -->
+                        </div>
+                    </div>     
                     <div class="mb-3"> <!-- CHECAR -->
-                        <label for="nuevoContratoDescripcion" class="form-label fw-bold">Cliente</label>
+                        <label for="nuevoContratoCliente" class="form-label fw-bold">Cliente</label>
                         <textarea class="form-control" id="nuevoContratoCliente" rows="3"
                             placeholder="Escribe un cliente" required disabled></textarea>
                     </div>
                     <div class="mb-3"> <!-- CHECAR -->
-                        <label for="nuevoContratoDescripcion" class="form-label fw-bold">Categoria</label>
+                        <label for="nuevoContratoCategoria" class="form-label fw-bold">Categoria</label>
                         <textarea class="form-control" id="nuevoContratoCategoria" rows="3"
                             placeholder="Escribe una categoría" required disabled></textarea>
                     </div>
-                    <input type="hidden" id="nuevoCContratoId">
+                    <input type="hidden" id="nuevoContratoId">
                 </form>
             </div>
             <div class="modal-footer">
@@ -336,6 +342,23 @@
 
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
+    <!--Container Main end-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    
+    <!--Script de idioma del datepicker-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.es.min.js"></script>
+
+     <script>
+         $(document).ready(function () {
+             $('#nuevaFechaVencimiento').datepicker({
+                 format: 'yyyy-mm-dd', // Formato de fecha
+                 autoclose: true,     // Cierra el selector automáticamente
+                 todayHighlight: true, // Resalta la fecha actual
+                 language: 'es'       // Configura el idioma a español
+             });
+         });
+     </script> 
 
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function (event) {
@@ -390,24 +413,36 @@
                 fetch(url, { method: 'GET' })
                     .then(response => response.json())
                     .then(data => {
+                        console.log(data.result);
                         if (data.result && Array.isArray(data.result)) {
                             tabla.clear();
                             data.result.forEach((contrato, index) => {
+                                // Acceder a los datos del cliente y la categoría
+                                const clienteNombre = contrato.cliente ? contrato.cliente.nombre : 'Sin Cliente';
+                                const categoriaNombre = contrato.categorias ? contrato.categorias.nombre : 'Sin Categoría';
+
+                                // Agregar la fila con los nombres de cliente y categoría
                                 tabla.row.add([
                                     index + 1,
                                     contrato.nombre,
                                     contrato.descripcion,
                                     contrato.fechaVencimiento,
-                                    contrato.cliente,
-                                    contrato.categoria,
+                                    clienteNombre, // Nombre del cliente
+                                    categoriaNombre, // Nombre de la categoría
                                     contrato.status ? 'Activo' : 'Inactivo',
-                                    `<button class="btn btn-primary editar" data-id="${contrato.id}" data-nombre="${contrato.nombre}" data-descripcion="${contrato.descripcion}" data-fechaVencimiento="${contrato.fechaVencimiento}"
-                                    data-cliente="${contrato.cliente}" data-categoria="${contrato.categoria}">
-                                    <i class='bx bx-edit'></i>
-                                </button>
-                                <button class="btn btn-secondary cambiar-status" data-id="${contrato.id}">
-                                    <i class='bx bx-refresh'></i>
-                                </button>`
+                                    `<button class="btn btn-primary editar" data-id="${contrato.id}" data-nombre="${contrato.nombre}" data-descripcion="${contrato.descripcion}" data-fechaVencimiento="${contrato.fechaVencimiento}" data-clienteId="${contrato.cliente ? contrato.cliente.id : ''}" data-categoriaId="${contrato.categorias ? contrato.categorias.id : ''}">
+                                        <i class='bx bx-edit'></i>
+                                    </button>
+                                    <button class="btn btn-secondary cambiar-status" 
+        data-id="${contrato.id}" 
+        data-nombre="${contrato.nombre}" 
+        data-descripcion="${contrato.descripcion}" 
+        data-fechavencimiento="${contrato.fechaVencimiento}" 
+        data-clienteid="${contrato.cliente.id}" 
+        data-categoriaid="${contrato.categorias.id}" 
+        data-estado="${contrato.status ? 'activo' : 'inactivo'}">
+        <i class='bx bx-refresh'></i>
+                                    </button>`
                                 ]).draw();
                             });
                         }
@@ -415,16 +450,31 @@
                     .catch(console.error);
             }
 
+
             cargarContratos('http://localhost:8080/contratos/all');
 
             $('#buscarActivas').on('change', function () {
-                cargarContratos(this.checked ? 'http://localhost:8080/contratos/status' : 'http://localhost:8080/contratos/all');
+                cargarContratos(this.checked ? 'http://localhost:8080/contratos/actives' : 'http://localhost:8080/contratos/all');
             });
 
             $('#tablaCategorias tbody').on('click', '.cambiar-status', function () {
                 const id = $(this).data('id');
-                const estadoActual = $(this).data('estado'); // Obtener el estado actual
-                const nuevoEstado = estadoActual === 'activo' ? false : true;
+                const nombre = $(this).data('nombre'); // Asegúrate de que estos atributos estén presentes en tu botón
+                const descripcion = $(this).data('descripcion');
+                const fechaVencimiento = $(this).data('fechavencimiento');
+                const clienteId = $(this).data('clienteid');
+                const categoriaId = $(this).data('categoriaid');
+                const nuevoEstado = $(this).data('estado') === 'activo' ? false : true;
+
+                console.log({
+                    id,
+                    nombre,
+                    descripcion,
+                    fechaVencimiento,
+                    clienteId,
+                    categoriaId,
+                    status: nuevoEstado
+                });
 
                 fetch(`http://localhost:8080/contratos/change-status`, {
                     method: 'PUT',
@@ -494,11 +544,13 @@
                 const nombre = document.getElementById("nuevoContratoNombre").value;
                 const descripcion = document.getElementById("nuevoContratoDescripcion").value;
                 const fechaVencimiento = document.getElementById("nuevoContratoFechaVencimiento").value;
+                const clienteId = document.getElementById("nuevoContratoCliente").value;
+                const categoriaId = document.getElementById("nuevoContratoCategoria").value;
 
                 fetch('http://localhost:8080/contratos/update', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, nombre, descripcion })
+                    body: JSON.stringify({ id, nombre, descripcion, fechaVencimiento, clienteId, categoriaId})
                 })
                     .then(response => {
                         if (!response.ok) throw new Error('Error al actualizar el contrato');
@@ -508,10 +560,10 @@
                         const alerta = document.getElementById("alerta");
 
                         if (data.type === "SUCCESS") {
-                            alerta.textContent = "Categoría actualizada exitosamente.";
+                            alerta.textContent = "Contrato actualizado exitosamente.";
                             alerta.className = "alert alert-success";
                         } else {
-                            alerta.textContent = "Error al actualizar la categoría: " + (data.message || "Error desconocido.");
+                            alerta.textContent = "Error al actualizar el contrato: " + (data.message || "Error desconocido.");
                             alerta.className = "alert alert-danger";
                         }
 
@@ -550,15 +602,15 @@
                     const nombre = button.getAttribute("data-nombre");
                     const descripcion = button.getAttribute("data-descripcion");
                     const fechaVencimiento = button.getAttribute("data-fechaVencimiento");
-                    const cliente = button.getAttribute("data-cliente");
-                    const categoria = button.getAttribute("data-categoria");
+                    const clienteId = button.getAttribute("data-clienteId");
+                    const categoriaId = button.getAttribute("data-categoriaId");
 
                     document.getElementById("nuevoContratoId").value = id;
                     document.getElementById("nuevoContratoNombre").value = nombre;
                     document.getElementById("nuevoContratoDescripcion").value = descripcion;
                     document.getElementById("nuevoContratoFechaVencimiento").value = fechaVencimiento;
-                    document.getElementById("nuevoContratoCliente").value = cliente;
-                    document.getElementById("nuevoContratoCategoria").value = categoria;
+                    document.getElementById("nuevoContratoCliente").value = clienteId;
+                    document.getElementById("nuevoContratoCategoria").value = categoriaId;
 
                     abrirModal();
                 }

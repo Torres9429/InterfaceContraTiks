@@ -121,18 +121,27 @@
                     </div>                                  
                     <div class="mb-3">
                         <label for="clienteContrato" class="form-label">Nombre del cliente del contrato</label>
-                        <input type="text" class="form-control" id="clienteContrato"
-                            placeholder="Escribe el cliente del contrato">
+                        <select class="form-control" id="clienteContrato" name="clienteId">
+                            <option value="">Seleccionar cliente</option> <!-- Opción por defecto -->
+                            <!-- Opciones serán cargadas con JavaScript -->
+                        </select>
                     </div>
                     <div class="mb-3">
-                        <label for="categoriaContrato" class="form-label">Nombre de la categoria del contrato</label>
-                        <input type="text" class="form-control" id="categoriaContrato"
-                            placeholder="Escribe la categoria del contrato">
+                        <label for="categoriaContrato" class="form-label">Nombre de la categoría del contrato</label>
+                        <select class="form-control" id="categoriaContrato" name="categoriaId">
+                            <option value="">Seleccionar categoría</option> <!-- Opción por defecto -->
+                            <!-- Opciones serán cargadas con JavaScript -->
+                        </select> 
                     </div>
                     <button type="submit" class="btn btn-primary">Agregar contrato</button>
                 </form>
             </div>
         </div>
+
+         <!-- ALERT para Mensaje de éxito o error -->
+         <div id="alerta" class="alert mt-3" role="alert" style="display: none;"></div>
+
+
         <!--Container Main end-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
         <!--Script de idioma del datepicker-->
@@ -141,13 +150,63 @@
         <script>
             $(document).ready(function () {
                 $('#fechaVencimientoContrato').datepicker({
-                    format: 'dd/mm/yyyy', // Formato de fecha
+                    format: 'yyyy-mm-dd', // Formato de fecha
                     autoclose: true,     // Cierra el selector automáticamente
                     todayHighlight: true, // Resalta la fecha actual
                     language: 'es'       // Configura el idioma a español
                 });
             });
-        </script>  
+        </script> 
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+    // Función para cargar los clientes
+    function loadClientes() {
+        fetch('http://localhost:8080/contratos/clientes')  // Cambia la URL si es necesario
+            .then(response => response.json())  // Convierte la respuesta a JSON
+            .then(data => {  // `data` ahora es la respuesta JSON
+                console.log(data);  // Verifica qué contiene `data`
+                const clienteSelect = document.getElementById('clienteContrato');
+                if (data.result && Array.isArray(data.result)) {  // Verifica si data.result existe y es un arreglo
+                    data.result.forEach(cliente => {  // Asegúrate de que `data.result` sea un arreglo
+                        const option = document.createElement('option');
+                        option.value = cliente.id;  // El valor será el ID del cliente
+                        option.textContent = cliente.nombre;  // El texto mostrado será el nombre del cliente
+                        clienteSelect.appendChild(option);
+                    });
+                } else {
+                    console.error('Los datos de clientes no están en el formato esperado.');
+                }
+            })
+            .catch(error => console.error("Error cargando los clientes:", error));
+    }
+
+    // Función para cargar las categorías
+    function loadCategorias() {
+        fetch('http://localhost:8080/contratos/categorias')  // Cambia la URL si es necesario
+            .then(response => response.json())  // Convierte la respuesta a JSON
+            .then(data => {  // `data` ahora es la respuesta JSON
+                console.log(data);  // Verifica qué contiene `data`
+                const categoriaSelect = document.getElementById('categoriaContrato');
+                if (data.result && Array.isArray(data.result)) {  // Verifica si data.result existe y es un arreglo
+                    data.result.forEach(categoria => {  // Asegúrate de que `data.result` sea un arreglo
+                        const option = document.createElement('option');
+                        option.value = categoria.id;  // El valor será el ID de la categoría
+                        option.textContent = categoria.nombre;  // El texto mostrado será el nombre de la categoría
+                        categoriaSelect.appendChild(option);
+                    });
+                } else {
+                    console.error('Los datos de categorías no están en el formato esperado.');
+                }
+            })
+            .catch(error => console.error("Error cargando las categorías:", error));
+    }
+            
+                // Llamar a las funciones para cargar los datos cuando la página se haya cargado
+                loadClientes();
+                loadCategorias();
+            });
+        </script>
         
         <script type='text/javascript'
             src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js'></script>
@@ -205,9 +264,11 @@
                     nombre: nombre,
                     descripcion: descripcion,
                     fechaVencimiento: fechaVencimiento,
-                    cliente: cliente,
-                    categoria: categoria
+                    clienteId: cliente,
+                    categoriaId: categoria
                 };
+                console.log("Datos: ", data);  // Imprime los datos que se están enviando
+
 
                 fetch('http://localhost:8080/contratos/save', {
                     method: 'POST',

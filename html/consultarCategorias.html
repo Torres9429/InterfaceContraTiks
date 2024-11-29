@@ -473,7 +473,7 @@
                 fetch('http://localhost:8080/categoria/update', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, nombre, descripcion })
+                    body: JSON.stringify({ id, nombre, descripcion})
                 })
                     .then(response => {
                         if (!response.ok) throw new Error('Error al actualizar la categoría');
