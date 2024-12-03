@@ -160,51 +160,50 @@
         
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-    // Función para cargar los clientes
-    function loadClientes() {
-        fetch('http://localhost:8080/contratos/clientes')  // Cambia la URL si es necesario
-            .then(response => response.json())  // Convierte la respuesta a JSON
-            .then(data => {  // `data` ahora es la respuesta JSON
-                console.log(data);  // Verifica qué contiene `data`
-                const clienteSelect = document.getElementById('clienteContrato');
-                if (data.result && Array.isArray(data.result)) {  // Verifica si data.result existe y es un arreglo
-                    data.result.forEach(cliente => {  // Asegúrate de que `data.result` sea un arreglo
-                        const option = document.createElement('option');
-                        option.value = cliente.id;  // El valor será el ID del cliente
-                        option.textContent = cliente.nombre;  // El texto mostrado será el nombre del cliente
-                        clienteSelect.appendChild(option);
-                    });
-                } else {
-                    console.error('Los datos de clientes no están en el formato esperado.');
-                }
-            })
-            .catch(error => console.error("Error cargando los clientes:", error));
-    }
+            // Función para cargar los clientes
+            function loadClientes() {
+                fetch('http://localhost:8080/contratos/clientes')  
+                    .then(response => response.json())  
+                    .then(data => {  
+                        console.log(data);  
+                        const clienteSelect = document.getElementById('clienteContrato');
+                        if (data.result && Array.isArray(data.result)) {  
+                            data.result.forEach(cliente => {  
+                                const option = document.createElement('option');
+                                option.value = cliente.id;  
+                                option.textContent = cliente.nombre;  
+                                clienteSelect.appendChild(option);
+                            });
+                        } else {
+                            console.error('Los datos de clientes no están en el formato esperado.');
+                        }
+                    })
+                    .catch(error => console.error("Error cargando los clientes:", error));
+            }
 
-    // Función para cargar las categorías
-    function loadCategorias() {
-        fetch('http://localhost:8080/contratos/categorias')  // Cambia la URL si es necesario
-            .then(response => response.json())  // Convierte la respuesta a JSON
-            .then(data => {  // `data` ahora es la respuesta JSON
-                console.log(data);  // Verifica qué contiene `data`
-                const categoriaSelect = document.getElementById('categoriaContrato');
-                if (data.result && Array.isArray(data.result)) {  // Verifica si data.result existe y es un arreglo
-                    data.result.forEach(categoria => {  // Asegúrate de que `data.result` sea un arreglo
-                        const option = document.createElement('option');
-                        option.value = categoria.id;  // El valor será el ID de la categoría
-                        option.textContent = categoria.nombre;  // El texto mostrado será el nombre de la categoría
-                        categoriaSelect.appendChild(option);
-                    });
-                } else {
-                    console.error('Los datos de categorías no están en el formato esperado.');
-                }
-            })
-            .catch(error => console.error("Error cargando las categorías:", error));
-    }
-            
-                // Llamar a las funciones para cargar los datos cuando la página se haya cargado
-                loadClientes();
-                loadCategorias();
+            // Función para cargar las categorías
+            function loadCategorias() {
+                fetch('http://localhost:8080/contratos/categorias')  
+                    .then(response => response.json())  
+                    .then(data => { 
+                        console.log(data);  
+                        const categoriaSelect = document.getElementById('categoriaContrato');
+                        if (data.result && Array.isArray(data.result)) {  
+                            data.result.forEach(categoria => {  
+                                const option = document.createElement('option');
+                                option.value = categoria.id;  
+                                option.textContent = categoria.nombre;  
+                                categoriaSelect.appendChild(option);
+                            });
+                        } else {
+                            console.error('Los datos de categorías no están en el formato esperado.');
+                        }
+                    })
+                    .catch(error => console.error("Error cargando las categorías:", error));
+            }
+
+            loadClientes();
+            loadCategorias();
             });
         </script>
         
