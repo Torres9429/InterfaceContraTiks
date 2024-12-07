@@ -153,7 +153,7 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout(event)">Cerrar sesión</a></li>
                         </ul>
                     </div>
                 </div>
@@ -195,6 +195,57 @@
             };
             showNavbar('header-toggle', 'nav-bar', 'body-pd', 'header');
         });
+
+        function logout(event) {
+        event.preventDefault(); 
+
+        const correo = document.getElementById("email").value;
+        const contrasena = document.getElementById("password").value;
+
+        fetch(`http://localhost:8080/usuarios/logout`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ correo, contrasena })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const alerta = document.getElementById("alerta");
+
+            if (data.type === "SUCCESS") {
+                alerta.textContent = "Cerrando sesión...";
+                alerta.className = "alert alert-success";
+                alerta.style.display = "block";
+                // Redirigir después de 1 segundos
+                setTimeout(() => {
+                    window.location.href = 'login.html'; // Redirigir a la página principal
+                }, 1000);
+            } else {
+                alerta.textContent = "Error al cerrar sesión: " + (data.message || "Credenciales incorrectas.");
+                alerta.className = "alert alert-danger";
+                alerta.style.display = "block";
+
+                // Ocultar alerta después de 5 segundos
+                setTimeout(() => {
+                    alerta.style.display = "none";
+                }, 5000);
+            }
+        })
+        .catch(error => {
+            console.error('Error al iniciar sesión:', error);
+
+            const alerta = document.getElementById("alerta");
+            alerta.textContent = "Hubo un error al procesar tu solicitud. Inténtalo más tarde.";
+            alerta.className = "alert alert-danger";
+            alerta.style.display = "block";
+
+            // Ocultar alerta después de 5 segundos
+            setTimeout(() => {
+                alerta.style.display = "none";
+            }, 5000);
+        });
+    }
     </script>
 </body>
 

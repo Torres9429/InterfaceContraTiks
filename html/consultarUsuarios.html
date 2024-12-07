@@ -4,7 +4,7 @@
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <title>Consultar Clientes</title>
+    <title>Consultar Usuarios</title>
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css' rel='stylesheet'>
     <link href='https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../css/menu.css">
@@ -17,32 +17,32 @@
             margin: 20px 0;
         }
 
-        #tablaClientes {
+        #tablaCategorias {
             border: 1px solid #ddd;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        #tablaClientes thead {
+        #tablaCategorias thead {
             background-color: #4723D9;
             color: #ffffff;
         }
 
-        #tablaClientes thead th {
+        #tablaCategorias thead th {
             text-align: center;
             font-weight: bold;
         }
 
-        #tablaClientes tbody tr {
+        #tablaCategorias tbody tr {
             transition: background-color 0.2s ease;
         }
 
-        #tablaClientes tbody tr:hover {
+        #tablaCategorias tbody tr:hover {
             background-color: #dce0f6d1;
         }
 
-        #tablaClientes .btn {
+        #tablaCategorias .btn {
             margin: 0 2px;
         }
 
@@ -168,6 +168,7 @@
             background-color: #5a34e0;
         }
     </style>
+
 </head>
 
 <body id="body-pd">
@@ -238,7 +239,7 @@
                             data-bs-toggle="dropdown" aria-expanded="false">
                             <i class='bx bx-wink-smile nav_icon'></i> <span class="nav_name">Perfil</span>
                         </a>
-                        <ul class="dropdown-menu aria-labelledby=" dropdownUser1">
+                        <ul class="dropdown-menu" aria-labelledby=" dropdownUser1">
                             <li><a class="dropdown-item" href="#">Perfil</a></li>
                             <li><a class="dropdown-item" href="#">Cambiar contraseña</a></li>
                             <li>
@@ -255,21 +256,20 @@
     <!-- Contenido principal -->
     <div class="bg-light">
         <div class="container mt-5">
-            <h1 class="text-center">Consultar Clientes</h1>
+            <h1 class="text-center">Consultar Usuarios</h1>
             <div class="mb-3">
-                <label for="buscarActivas" class="form-label">Mostrar solo clientes activos:</label>
+                <label for="buscarActivas" class="form-label">Mostrar solo categorías activas:</label>
                 <input type="checkbox" id="buscarActivas">
             </div>
-            <table id="tablaClientes" class="display table table-striped">
+            <table id="tablaUsuarios" class="display table table-striped">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>#</th>
                         <th>Nombre</th>
                         <th>Apellidos</th>
-                        <th>Correo</th>
                         <th>Teléfono</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
+                        <th>Correo</th>
+                        <th>Tipo de usuario</th>
                     </tr>
                 </thead>
                 <tbody id="categoriasBody">
@@ -281,35 +281,35 @@
     <!-- Mensaje de éxito o error -->
     <div id="alerta" class="alert mt-3" role="alert" style="display: none;"></div>
     <!-- Modal para actualizar categoría -->
-    <div id="nuevoModalActualizarCliente" class="modal-overlay">
+    <div id="nuevoModalActualizarUsuario" class="modal-overlay">
         <div class="modal-container">
             <div class="modal-header">
-                <h5 class="modal-title">Actualizar Categoría</h5>
+                <h5 class="modal-title">Actualizar Usuario</h5>
                 <button type="button" class="btn-close" id="cerrarNuevoModal">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="nuevoFormActualizarCliente">
+                <form id="nuevoFormActualizarUsuario">
                     <div class="mb-3">
-                        <label for="nuevoClienteNombre" class="form-label fw-bold">Nombre</label>
-                        <input type="text" class="form-control" id="nuevoClienteNombre"
-                            placeholder="Escribe el nombre del cliente" required>
+                        <label for="nuevoUsuarioNombre" class="form-label fw-bold">Nombre</label>
+                        <input type="text" class="form-control" id="nuevoUsuarioNombre"
+                            placeholder="Nombre" required>
                     </div>
                     <div class="mb-3">
-                        <label for="nuevoClienteApellidos" class="form-label fw-bold">Apellidos</label>
-                        <input type="text" class="form-control" id="nuevoClienteApellidos"
-                            placeholder="Escribe los apellidos del cliente" required>
+                        <label for="nuevoUsuarioApellidos" class="form-label fw-bold">Apellidos</label>
+                        <input class="form-control" id="nuevoUsuarioApellidos" rows="3"
+                            placeholder="Apellidos" required>
                     </div>
                     <div class="mb-3">
-                        <label for="nuevoClienteCorreo" class="form-label fw-bold">Correo</label>
-                        <input type="email" class="form-control" id="nuevoClienteCorreo" rows="3"
-                            placeholder="Escribe una descripción" required>
+                        <label for="nuevoUsuarioTelefono" class="form-label fw-bold">Teléfono</label>
+                        <input type="number" class="form-control" id="nuevoUsuarioTelefono" rows="3"
+                            placeholder="Apellidos" required maxlength="15" minlength="10" required pattern="^[0-9]{10}$>
                     </div>
                     <div class="mb-3">
-                        <label for="nuevoClienteTelefono" class="form-label fw-bold">Teléfono</label>
-                        <input class="form-control" id="nuevoClienteTelefono" rows="3"
-                            placeholder="Escribe una nuevo teléfono" required>
+                        <label for="nuevoUsuariCorreo" class="form-label fw-bold">Correo</label>
+                        <input class="form-control" id="nuevoUsuarioCorreo" rows="3"
+                            placeholder="Correo" required disabled>
                     </div>
-                    <input type="hidden" id="nuevoClienteId">
+                    <input type="hidden" id="nuevoUsuarioId">
                 </form>
             </div>
             <div class="modal-footer">
@@ -319,14 +319,14 @@
         </div>
     </div>
 
-   <!-- Bootstrap JS -->
-   <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js'></script>
+    <!-- Bootstrap JS -->
+    <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js'></script>
 
-   <!-- jQuery -->
-   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+    <!-- jQuery -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
 
-   <!-- DataTables JS -->
-   <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function (event) {
@@ -368,33 +368,33 @@
             // Your code to run since DOM is loaded and ready
         });
 
-        
+
         $(document).ready(function () {
-            const tabla = $('#tablaClientes').DataTable({
+            const tabla = $('#tablaCategorias').DataTable({
                 pageLength: 6,
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
                 }
             });
 
-            function cargarClientes(url) {
+            function cargarUsuarios(url) {
                 fetch(url, { method: 'GET' })
                     .then(response => response.json())
                     .then(data => {
                         if (data.result && Array.isArray(data.result)) {
                             tabla.clear();
-                            data.result.forEach((cliente, index) => {
+                            data.result.forEach((usuario, index) => {
                                 tabla.row.add([
                                     index + 1,
-                                    cliente.nombre,
-                                    cliente.apellidos,
-                                    cliente.correo,
-                                    cliente.telefono,
-                                    cliente.status ? 'Activo' : 'Inactivo',
-                                    `<button class="btn btn-primary editar" data-id="${cliente.id}" data-nombre="${cliente.nombre}" data-apellidos="${cliente.apellidos}" data-correo="${cliente.correo}" data-telefono="${cliente.telefono}">
+                                    usuario.nombre,
+                                    usuario.apellidos,
+                                    usuario.correo,
+                                    usuario.telefono,
+                                    usuario.status ? 'Activo' : 'Inactivo',
+                                    `<button class="btn btn-primary editar" data-id="${usuario.id}" data-nombre="${usuario.nombre}" data-apellidos="${usuario.apellidos}" data-correo="${usuario.correo}" data-telefono="${usuario.telefono}">
                                     <i class='bx bx-edit'></i>
                                 </button>
-                                <button class="btn btn-secondary cambiar-status" data-id="${cliente.id}">
+                                <button class="btn btn-secondary cambiar-status" data-id="${usuario.id}">
                                     <i class='bx bx-refresh'></i>
                                 </button>`
                                 ]).draw();
@@ -404,18 +404,18 @@
                     .catch(console.error);
             }
 
-            cargarClientes('http://localhost:8080/clientes/all');
+            cargarUsuarios('http://localhost:8080/usuarios/all');
 
             $('#buscarActivas').on('change', function () {
-                cargarClientes(this.checked ? 'http://localhost:8080/clientes/actives' : 'http://localhost:8080/clientes/all');
+                cargarUsuarios(this.checked ? 'http://localhost:8080/usuarios/actives' : 'http://localhost:8080/usuarios/all');
             });
 
-            $('#tablaClientes tbody').on('click', '.cambiar-status', function () {
+            $('#tablaUsuarios tbody').on('click', '.cambiar-status', function () {
                 const id = $(this).data('id');
                 const estadoActual = $(this).data('estado'); // Obtener el estado actual
                 const nuevoEstado = estadoActual === 'activo' ? false : true;
 
-                fetch(`http://localhost:8080/clientes/changeStatus`, {
+                fetch(`http://localhost:8080/usuarios/changeStatus`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -430,10 +430,10 @@
                         const alerta = document.getElementById("alerta");
 
                         if (data.type === "SUCCESS") {
-                            alerta.textContent = "Estado del cliente actualizado correctamente.";
+                            alerta.textContent = "Estado de usuario actualizado correctamente.";
                             alerta.className = "alert alert-success";
                         } else {
-                            alerta.textContent = "Error al cambiar el estado del cliente: " + (data.message || "Error desconocido.");
+                            alerta.textContent = "Error al cambiar el estado del usuario: " + (data.message || "Error desconocido.");
                             alerta.className = "alert alert-danger";
                         }
 
@@ -446,7 +446,7 @@
                         }, 5000);
 
                         // Actualiza la tabla o recarga la lista de categorías
-                        cargarClientes('http://localhost:8080/clientes/all');
+                        cargarCategorias('http://localhost:8080/usuarios/all');
                     })
                     .catch(error => {
                         console.error('Error al cambiar el estado de la categoría:', error);
@@ -463,7 +463,7 @@
             });
 
 
-            const nuevoModal = document.getElementById("nuevoModalActualizarCliente");
+            const nuevoModal = document.getElementById("nuevoModalActualizarUsuario");
             const cerrarBotones = [
                 document.getElementById("cerrarNuevoModal"),
                 document.getElementById("cerrarNuevoModalFooter")
@@ -479,29 +479,29 @@
             cerrarBotones.forEach(btn => btn.addEventListener("click", cerrarModal));
 
             document.getElementById("guardarNuevoCambios").addEventListener("click", function () {
-                const id = document.getElementById("nuevoClienteId").value;
-                const nombre = document.getElementById("nuevoClienteNombre").value;
-                const apellidos = document.getElementById("nuevoClienteApellidos").value;
-                const correo = document.getElementById("nuevoClienteCorreo").value;
-                const telefono = document.getElementById("nuevoClienteTelefono").value;
+                const id = document.getElementById("nuevoUsuarioId").value;
+                const nombre = document.getElementById("nuevoUsuarioNombre").value;
+                const apellidos = document.getElementById("nuevoUsuarioApellidos").value;
+                const correo = document.getElementById("nuevoUsuarioCorreo").value;
+                const telefono = document.getElementById("nuevoUsuarioTelefono")
 
-                fetch('http://localhost:8080/clientes/update', {
+                fetch('http://localhost:8080/usuarios/update', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, nombre, apellidos, correo, telefono })
+                    body: JSON.stringify({ id, nombre, descripcion })
                 })
                     .then(response => {
-                        if (!response.ok) throw new Error('Error al actualizar cliente');
+                        if (!response.ok) throw new Error('Error al actualizar usuario');
                         return response.json();
                     })
                     .then(data => {
                         const alerta = document.getElementById("alerta");
 
                         if (data.type === "SUCCESS") {
-                            alerta.textContent = "Cliente actualizado exitosamente.";
+                            alerta.textContent = "Usuario actualizado exitosamente.";
                             alerta.className = "alert alert-success";
                         } else {
-                            alerta.textContent = "Error al actualizar cliente: " + (data.message || "Error desconocido.");
+                            alerta.textContent = "Error al actualizar usuario: " + (data.message || "Error desconocido.");
                             alerta.className = "alert alert-danger";
                         }
 
@@ -512,9 +512,9 @@
                         setTimeout(() => {
                             alerta.style.display = "none";
                         }, 5000);
-                        console.log('Categoría actualizada:', data);
-                        // Actualiza la tabla o recarga la lista de clientes
-                        cargarClientes('http://localhost:8080/clientes/all');
+                        console.log('Usuario actualizado:', data);
+                        // Actualiza la tabla o recarga la lista de categorías
+                        cargarCategorias('http://localhost:8080/usuarios/all');
                         cerrarModal();
 
                     })
@@ -533,20 +533,20 @@
             });
 
             // apertura del modal con los datos
-            document.getElementById("tablaClientes").addEventListener("click", function (e) {
+            document.getElementById("tablaUsuarios").addEventListener("click", function (e) {
                 if (e.target.closest(".editar")) {
                     const button = e.target.closest(".editar");
                     const id = button.getAttribute("data-id");
                     const nombre = button.getAttribute("data-nombre");
                     const apellidos = button.getAttribute("data-apellidos");
-                    const correo = button.getAttribute("data-correo");
                     const telefono = button.getAttribute("data-telefono");
+                    const correo = button.getAttribute("data-correo");
 
-                    document.getElementById("nuevoClienteId").value = id;
-                    document.getElementById("nuevoClienteNombre").value = nombre;
-                    document.getElementById("nuevoClienteApellidos").value = nombre;
-                    document.getElementById("nuevoClienteTelefono").value = telefono;
-                    document.getElementById("nuevoClienteCorreo").value = correo;
+                    document.getElementById("nuevoUsuarioId").value = id;
+                    document.getElementById("nuevoUsuarioNombre").value = nombre;
+                    document.getElementById("nuevoUsuarioApellidos").value = apellidos;
+                    document.getElementById("nuevoUsuarioTelefono").value = telefono;
+                    document.getElementById("nuevoUsuarioCorreo").value = correo;
 
                     abrirModal();
                 }
