@@ -375,7 +375,13 @@
         document.addEventListener("DOMContentLoaded", function () {
             // Función para cargar los clientes
             function loadClientes() {
-                fetch('http://localhost:8080/contratos/clientes')
+                fetch('http://localhost:8080/clientes/all', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    }
+                })
                     .then(response => response.json())
                     .then(data => {
                         console.log(data);
@@ -396,7 +402,13 @@
 
             // Función para cargar las categorías
             function loadCategorias() {
-                fetch('http://localhost:8080/contratos/categorias')
+                fetch('http://localhost:8080/categoria/all', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    }
+                })
                     .then(response => response.json())
                     .then(data => {
                         console.log(data);
@@ -482,7 +494,13 @@
             });
 
             function cargarContratos(url) {
-                fetch(url, { method: 'GET' })
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    }
+                })
                     .then(response => response.json())
                     .then(data => {
                         console.log(data.result);
@@ -549,6 +567,7 @@
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
                     },
                     body: JSON.stringify({
                         id: id,
@@ -637,7 +656,10 @@
                 };
                 fetch('http://localhost:8080/contratos/update', {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    },
                     body: JSON.stringify(datosEnvio)
                 })
                     .then(response => {
@@ -700,8 +722,20 @@
 
                     // Establecer los valores de cliente y categoría en los `select`
                     Promise.all([
-                        fetch(`http://localhost:8080/contratos/clientes`).then(response => response.json()),
-                        fetch(`http://localhost:8080/contratos/categorias`).then(response => response.json())
+                        fetch(`http://localhost:8080/clientes/all`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                            }
+                        }).then(response => response.json()),
+                        fetch(`http://localhost:8080/categoria/all`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                            }
+                        }).then(response => response.json())
                     ])
                         .then(([clientesData, categoriasData]) => {
                             const clienteSelect = document.getElementById("nuevoContratoCliente");

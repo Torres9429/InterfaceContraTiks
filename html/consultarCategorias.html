@@ -365,9 +365,14 @@
                     url: 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
                 }
             });
-
+           
             function cargarCategorias(url) {
-                fetch(url, { method: 'GET' })
+                fetch(url, { method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    }
+                 })
                     .then(response => response.json())
                     .then(data => {
                         if (data.result && Array.isArray(data.result)) {
@@ -406,6 +411,7 @@
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
                     },
                     body: JSON.stringify({
                         id: id,
@@ -472,7 +478,9 @@
 
                 fetch('http://localhost:8080/categoria/update', {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                     },
                     body: JSON.stringify({ id, nombre, descripcion})
                 })
                     .then(response => {

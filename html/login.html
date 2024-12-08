@@ -58,10 +58,21 @@
                 })
                 .then(data => {
                     if (data.jwt) {
-                        const {jwt} = data;
+                        const { jwt, userId, correo, role, expirationTime } = data;
                         console.log(data);
-                        localStorage.setItem("jwt", data.jwt); // Guardar token en localStorage
-                        window.location.href = "bienvenida.html";
+                        //const role = data.role;
+                        if (role === "ROLE_ADMIN_ACCESS") {
+                            window.location.href = "bienvenida.html"; // Redirigir a la página de admin
+                            localStorage.setItem("jwt", data.jwt); // Guardar token en localStorage
+                            localStorage.setItem("role", data.role);
+                            localStorage.setItem("userId", data.userId);
+                            localStorage.setItem("username", data.username);
+                        } else {
+                            window.location.href = "bienvenidaGerente.html"; // Redirigir a la página de usuario
+                            localStorage.setItem("jwt", data.jwt); // Guardar token en localStorage
+                        }
+                        
+                        //window.location.href = "bienvenida.html";
                     }
                 })
                 .catch(error => {
