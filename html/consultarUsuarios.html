@@ -8,41 +8,40 @@
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css' rel='stylesheet'>
     <link href='https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../css/menu.css">
-
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
     <style>
         /* Personalización para la tabla */
-        #tablaCategorias_wrapper {
+        #tablaUsuarios_wrapper {
             margin: 20px 0;
         }
 
-        #tablaCategorias {
+        #tablaUsuarios {
             border: 1px solid #ddd;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        #tablaCategorias thead {
+        #tablaUsuarios thead {
             background-color: #4723D9;
             color: #ffffff;
         }
 
-        #tablaCategorias thead th {
+        #tablaUsuarios thead th {
             text-align: center;
             font-weight: bold;
         }
 
-        #tablaCategorias tbody tr {
+        #tablaUsuarios tbody tr {
             transition: background-color 0.2s ease;
         }
 
-        #tablaCategorias tbody tr:hover {
+        #tablaUsuarios tbody tr:hover {
             background-color: #dce0f6d1;
         }
 
-        #tablaCategorias .btn {
+        #tablaUsuarios .btn {
             margin: 0 2px;
         }
 
@@ -258,7 +257,7 @@
         <div class="container mt-5">
             <h1 class="text-center">Consultar Usuarios</h1>
             <div class="mb-3">
-                <label for="buscarActivas" class="form-label">Mostrar solo categorías activas:</label>
+                <label for="buscarActivas" class="form-label">Mostrar solo usuarios activos:</label>
                 <input type="checkbox" id="buscarActivas">
             </div>
             <table id="tablaUsuarios" class="display table table-striped">
@@ -269,10 +268,11 @@
                         <th>Apellidos</th>
                         <th>Teléfono</th>
                         <th>Correo</th>
-                        <th>Tipo de usuario</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="categoriasBody">
+                <tbody id="usuariosBody">
                     <!-- Filas dinámicas llenadas con DataTables -->
                 </tbody>
             </table>
@@ -291,23 +291,22 @@
                 <form id="nuevoFormActualizarUsuario">
                     <div class="mb-3">
                         <label for="nuevoUsuarioNombre" class="form-label fw-bold">Nombre</label>
-                        <input type="text" class="form-control" id="nuevoUsuarioNombre"
-                            placeholder="Nombre" required>
+                        <input type="text" class="form-control" id="nuevoUsuarioNombre" placeholder="Nombre" required>
                     </div>
                     <div class="mb-3">
                         <label for="nuevoUsuarioApellidos" class="form-label fw-bold">Apellidos</label>
-                        <input class="form-control" id="nuevoUsuarioApellidos" rows="3"
-                            placeholder="Apellidos" required>
+                        <input class="form-control" id="nuevoUsuarioApellidos" rows="3" placeholder="Apellidos"
+                            required>
                     </div>
                     <div class="mb-3">
                         <label for="nuevoUsuarioTelefono" class="form-label fw-bold">Teléfono</label>
                         <input type="number" class="form-control" id="nuevoUsuarioTelefono" rows="3"
                             placeholder="Apellidos" required maxlength="15" minlength="10" required pattern="^[0-9]{10}$>
                     </div>
-                    <div class="mb-3">
+                    <div class=" mb-3">
                         <label for="nuevoUsuariCorreo" class="form-label fw-bold">Correo</label>
-                        <input class="form-control" id="nuevoUsuarioCorreo" rows="3"
-                            placeholder="Correo" required disabled>
+                        <input class="form-control" id="nuevoUsuarioCorreo" rows="3" placeholder="Correo" required
+                            disabled>
                     </div>
                     <input type="hidden" id="nuevoUsuarioId">
                 </form>
@@ -370,7 +369,7 @@
 
 
         $(document).ready(function () {
-            const tabla = $('#tablaCategorias').DataTable({
+            const tabla = $('#tablaUsuarios').DataTable({
                 pageLength: 6,
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
@@ -378,23 +377,29 @@
             });
 
             function cargarUsuarios(url) {
-                fetch(url, { method: 'GET' })
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    }
+                })
                     .then(response => response.json())
                     .then(data => {
                         if (data.result && Array.isArray(data.result)) {
                             tabla.clear();
-                            data.result.forEach((usuario, index) => {
+                            data.result.forEach((usuarios, index) => {
                                 tabla.row.add([
                                     index + 1,
-                                    usuario.nombre,
-                                    usuario.apellidos,
-                                    usuario.correo,
-                                    usuario.telefono,
-                                    usuario.status ? 'Activo' : 'Inactivo',
-                                    `<button class="btn btn-primary editar" data-id="${usuario.id}" data-nombre="${usuario.nombre}" data-apellidos="${usuario.apellidos}" data-correo="${usuario.correo}" data-telefono="${usuario.telefono}">
+                                    usuarios.nombre,
+                                    usuarios.apellidos,
+                                    usuarios.telefono,
+                                    usuarios.correo,
+                                    usuarios.status ? 'Activo' : 'Inactivo',
+                                    `<button class="btn btn-primary editar" data-id="${usuarios.id}" data-nombre="${usuarios.nombre}" data-apellidos="${usuarios.apellidos}" data-correo="${usuarios.correo}" data-telefono="${usuarios.telefono}">
                                     <i class='bx bx-edit'></i>
                                 </button>
-                                <button class="btn btn-secondary cambiar-status" data-id="${usuario.id}">
+                                <button class="btn btn-secondary cambiar-status" data-id="${usuarios.id}">
                                     <i class='bx bx-refresh'></i>
                                 </button>`
                                 ]).draw();
@@ -419,6 +424,7 @@
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
                     },
                     body: JSON.stringify({
                         id: id,
@@ -446,10 +452,10 @@
                         }, 5000);
 
                         // Actualiza la tabla o recarga la lista de categorías
-                        cargarCategorias('http://localhost:8080/usuarios/all');
+                        cargarUsuarios('http://localhost:8080/usuarios/all');
                     })
                     .catch(error => {
-                        console.error('Error al cambiar el estado de la categoría:', error);
+                        console.error('Error al cambiar el estado del usuario:', error);
                         const alerta = document.getElementById("alerta");
                         alerta.textContent = "Hubo un error al procesar tu solicitud.";
                         alerta.className = "alert alert-danger";
@@ -483,12 +489,15 @@
                 const nombre = document.getElementById("nuevoUsuarioNombre").value;
                 const apellidos = document.getElementById("nuevoUsuarioApellidos").value;
                 const correo = document.getElementById("nuevoUsuarioCorreo").value;
-                const telefono = document.getElementById("nuevoUsuarioTelefono")
+                const telefono = document.getElementById("nuevoUsuarioTelefono").value;
 
                 fetch('http://localhost:8080/usuarios/update', {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, nombre, descripcion })
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    },
+                    body: JSON.stringify({ id, nombre, apellidos, correo, telefono })
                 })
                     .then(response => {
                         if (!response.ok) throw new Error('Error al actualizar usuario');
@@ -514,7 +523,7 @@
                         }, 5000);
                         console.log('Usuario actualizado:', data);
                         // Actualiza la tabla o recarga la lista de categorías
-                        cargarCategorias('http://localhost:8080/usuarios/all');
+                        cargarUsuarios('http://localhost:8080/usuarios/all');
                         cerrarModal();
 
                     })

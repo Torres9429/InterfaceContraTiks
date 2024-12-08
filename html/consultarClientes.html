@@ -263,7 +263,7 @@
             <table id="tablaClientes" class="display table table-striped">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>#</th>
                         <th>Nombre</th>
                         <th>Apellidos</th>
                         <th>Correo</th>
@@ -378,7 +378,11 @@
             });
 
             function cargarClientes(url) {
-                fetch(url, { method: 'GET' })
+                fetch(url, { method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    } })
                     .then(response => response.json())
                     .then(data => {
                         if (data.result && Array.isArray(data.result)) {
@@ -419,6 +423,7 @@
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
                     },
                     body: JSON.stringify({
                         id: id,
@@ -487,7 +492,9 @@
 
                 fetch('http://localhost:8080/clientes/update', {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                     },
                     body: JSON.stringify({ id, nombre, apellidos, correo, telefono })
                 })
                     .then(response => {
