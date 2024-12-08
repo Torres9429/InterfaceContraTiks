@@ -119,10 +119,44 @@
                 </div>
             </div>
         </div>
-    
-        
+        <!-- Modal para actualizar el perfil -->
+    <div id="nuevoModalActualizarCategoria" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Perfil</h5>
+                <button type="button" class="btn-close" id="cerrarNuevoModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="nuevoFormEditarPerfil">
+                    <div class="mb-3">
+                        <label for="nuevoCategoriaNombre" class="form-label fw-bold">Nombre</label>
+                        <input type="text" class="form-control" id="nuevoCategoriaNombre"
+                            placeholder="Escribe el nombre de la categoría" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nuevoCategoriaDescripcion" class="form-label fw-bold">Correo</label>
+                        <textarea class="form-control" id="nuevoCategoriaDescripcion" rows="3"
+                            placeholder="Escribe una descripción" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nuevoUsuario" class="form-label fw-bold">Teléfono</label>
+                        <input class="form-control" id="nuevoCategoriaDescripcion" rows="3"
+                            placeholder="Escribe una descripción" required>
+                    </div>
+                    <input type="hidden" id="nuevoCategoriaId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cerrarNuevoModalFooter">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="guardarNuevoCambios">Guardar cambios</button>
+            </div>
+        </div>
+    </div>
+
         <!-- ALERT para Mensaje de éxito o error -->
         <div id="alerta" class="alert mt-3" role="alert" style="display: none;"></div>
+
+
 
 
         <!--Container Main end-->
@@ -169,6 +203,73 @@
                 // Your code to run since DOM is loaded and ready
             });
 
+            const nuevoModal = document.getElementById("nuevoModalActualizarCategoria");
+            const cerrarBotones = [
+                document.getElementById("cerrarNuevoModal"),
+                document.getElementById("cerrarNuevoModalFooter")
+            ];
+            const abrirModal = () => {
+                nuevoModal.style.display = "flex";
+            };
+
+            const cerrarModal = () => {
+                nuevoModal.style.display = "none";
+            };
+
+            cerrarBotones.forEach(btn => btn.addEventListener("click", cerrarModal));
+
+            document.getElementById("guardarNuevoCambios").addEventListener("click", function () {
+                const id = document.getElementById("nuevoCategoriaId").value;
+                const nombre = document.getElementById("nuevoCategoriaNombre").value;
+                const descripcion = document.getElementById("nuevoCategoriaDescripcion").value;
+
+                fetch('http://localhost:8080/*/update', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, nombre, descripcion})
+                })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Error al actualizar el perfil');
+                        return response.json();
+                    })
+                    .then(data => {
+                        const alerta = document.getElementById("alerta");
+
+                        if (data.type === "SUCCESS") {
+                            alerta.textContent = "Categoría actualizada exitosamente.";
+                            alerta.className = "alert alert-success";
+                        } else {
+                            alerta.textContent = "Error al actualizar el perfil: " + (data.message || "Error desconocido.");
+                            alerta.className = "alert alert-danger";
+                        }
+
+                        // Muestra la alerta
+                        alerta.style.display = "block";
+
+                        // Oculta la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
+                        console.log('Categoría actualizada:', data);
+                        // Actualiza la tabla o recarga la lista de categorías
+                        cargarCategorias('http://localhost:8080/*/all');
+                        cerrarModal();
+
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        const alerta = document.getElementById("alerta");
+                        alerta.textContent = "Hubo un error al procesar tu solicitud.";
+                        alerta.className = "alert alert-danger";
+                        alerta.style.display = "block";
+
+                        // Oculta la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
+                    });
+            });
+
 
             // Lógica para acciones de perfil
             document.getElementById('btnEditarPerfil').addEventListener('click', function () {
@@ -184,12 +285,11 @@
             });
 
         </script>
-
+        <script src="../js/access.js"></script>
         <script type='text/javascript'>var myLink = document.querySelector('a[href="#"]');
             myLink.addEventListener('click', function (e) {
                 e.preventDefault();
             });</script>
 
     </body>
-
 </html>

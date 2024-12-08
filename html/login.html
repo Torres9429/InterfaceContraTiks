@@ -43,7 +43,7 @@
             const correo = document.getElementById("email").value;
             const contrasena = document.getElementById("password").value;
 
-            fetch(`http://localhost:8080/login`, {
+            fetch(`http://localhost:8080/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,6 +58,8 @@
                 })
                 .then(data => {
                     if (data.jwt) {
+                        const {jwt} = data;
+                        console.log(data);
                         localStorage.setItem("jwt", data.jwt); // Guardar token en localStorage
                         window.location.href = "bienvenida.html";
                     }
