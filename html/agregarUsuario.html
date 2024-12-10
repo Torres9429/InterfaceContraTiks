@@ -24,7 +24,8 @@
             right: 15px;
             transform: translateY(50%);
             cursor: pointer;
-            z-index: 1; /* Asegura que el ícono esté encima del input */
+            z-index: 1;
+            /* Asegura que el ícono esté encima del input */
         }
     </style>
 
@@ -154,14 +155,13 @@
                     </div>
                     <div class="mb-3 position-relative">
                         <label for="contrasena" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="contrasena" placeholder="••••••••" required><i
-                            class="fas fa-eye-slash eye" id="contrasena" onclick="togglePassword('contrasena')"></i>
+                        <input type="password" class="form-control" id="contrasena" placeholder="••••••••" required>
+                        <i class="fas fa-eye-slash eye" id="toggleContrasena" onclick="togglePassword('contrasena')"></i>
                     </div>
                     <div class="mb-3 position-relative">
                         <label for="confirmarContra" class="form-label">Confirmar Contraseña</label>
-                        <input type="password" class="form-control" id="confirmarContra" placeholder="••••••••"
-                            required><i class="fas fa-eye-slash eye" id="confirmarContra"
-                            onclick="togglePassword('confirmarContra')"></i>
+                        <input type="password" class="form-control" id="confirmarContra" placeholder="••••••••" required>
+                        <i class="fas fa-eye-slash eye" id="toggleConfirmarContra" onclick="togglePassword('confirmarContra')"></i>
                     </div>
                     <button type="submit" class="btn btn-primary">Agregar usuario</button>
                 </form>
