@@ -100,7 +100,7 @@
                             <i class='bx bx-folder nav_icon'></i><span class="nav_name">Contratos</span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownContratos">
-                            <li><a class="dropdown-item" href="#">Consultar</a></li>
+                            <li><a class="dropdown-item" href="consultarContratosGerente.html">Consultar</a></li>
                         </ul>
                     </div>
                     <!-- Perfil y Cerrar sesión -->
@@ -115,7 +115,7 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout(event)">Cerrar sesión</a></li>
                         </ul>
                     </div>
                 </div>
@@ -128,7 +128,7 @@
         <h1 class="display-4">¡Bienvenido a ContraTiks!</h1>
         <p class="lead mt-3">El sistema ideal para gestionar contratos de manera fácil y eficiente.</p>
         <div class="welcome-buttons">
-            <a href="#" class="btn btn-secondary btn-lg">
+            <a href="consultarContratosGerente.html" class="btn btn-secondary btn-lg">
                 <i class="bx bx-search"></i> Consultar Contratos
             </a>
         </div>
@@ -155,6 +155,7 @@
             showNavbar('header-toggle', 'nav-bar', 'body-pd', 'header');
         });
     </script>
+    <script src="../js/access.js"></script>
 </body>
 
 </html>

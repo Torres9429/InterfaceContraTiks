@@ -267,6 +267,7 @@
                     const telefono = document.getElementById('nuevoUsuarioTelefono').value;
 
                     const datosActualizados = {
+                        userId,
                         nombre,
                         apellidos,
                         correo,
@@ -284,24 +285,54 @@
                         body: JSON.stringify(datosActualizados)
                     })
                     .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Error al guardar los cambios');
-                        }
+                        const alerta = document.getElementById("alerta");
+                        console.error('Error:');
+                        alerta.textContent = "Error al actualizar datos";
+                        alerta.className = "alert alert-danger";
+                        // Muestra la alerta
+                        alerta.style.display = "block";
+
+                        // Oculta la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
                         return response.json();
                     })
                     .then(data => {
-                        alert('Perfil actualizado correctamente');
-                        cargarDatosUsuario(`http://localhost:8080/usuarios/${userId}`);
+                        const alerta = document.getElementById("alerta");
+
+                        if (data.type === "SUCCESS") {
+                            alerta.textContent = "Datos actualizados correctamente.";
+                            alerta.className = "alert alert-success";
+                        } else {
+                            alerta.textContent = "Error al actualizar datos: " + (data.message || "Error desconocido.");
+                            alerta.className = "alert alert-danger";
+                        }
+
+                        // Muestra la alerta
+                        alerta.style.display = "block";
+
+                        // Oculta la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
+
+                        cargarUsuarios(`http://localhost:8080/usuarios/all`);
                         document.getElementById('nuevoModalActualizarPerfil').style.display = 'none';
                     })
                     .catch(error => {
+                        const alerta = document.getElementById("alerta");
                         console.error('Error:', error);
-                        alert('No se pudieron guardar los cambios');
-                    });
-                });
+                        alerta.textContent = "Error al actualizar datos ";
+                        alerta.className = "alert alert-danger";
+                        // Muestra la alerta
+                        alerta.style.display = "block";
 
-                document.getElementById('cerrarNuevoModal').addEventListener('click', function () {
-                    document.getElementById('nuevoModalActualizarPerfil').style.display = 'none';
+                        // Oculta la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
+                    });
                 });  
 
                 document.getElementById('cerrarNuevoModalFooter').addEventListener('click', function () {
