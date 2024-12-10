@@ -37,11 +37,12 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownContratos">
                                 <li><a class="dropdown-item" href="agregarContrato.html">Agregar</a></li>
-                                <li><a class="dropdown-item" href="consultarContratos.html">Consultar/Actualizar</a></li>
-    
+                                <li><a class="dropdown-item" href="consultarContratos.html">Consultar/Actualizar</a>
+                                </li>
+
                             </ul>
                         </div>
-    
+
                         <!-- Dropdown para Usuarios -->
                         <div class="nav-item dropdown">
                             <a class="nav_link dropdown-toggle" href="#" id="dropdownUsuarios" role="button"
@@ -51,7 +52,7 @@
                             <ul class="dropdown-menu" aria-labelledby="dropdownPerfil">
                                 <li><a class="dropdown-item" href="agregarUsuario.html">Agregar</a></li>
                                 <li><a class="dropdown-item" href="consultarUsuarios.html">Consultar/Actualizar</a></li>
-    
+
                             </ul>
                         </div>
                         <!-- Dropdown para Categorias -->
@@ -62,11 +63,12 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownCategorias">
                                 <li><a class="dropdown-item" href="agregarCategoria.html">Agregar</a></li>
-                                <li><a class="dropdown-item" href="consultarCategorias.html">Consultar/Actualizar</a></li>
-    
+                                <li><a class="dropdown-item" href="consultarCategorias.html">Consultar/Actualizar</a>
+                                </li>
+
                             </ul>
                         </div>
-    
+
                         <!-- Dropdown para Clientes -->
                         <div class="nav-item dropdown">
                             <a class="nav_link dropdown-toggle" href="#" id="dropdownClientes" role="button"
@@ -76,7 +78,7 @@
                             <ul class="dropdown-menu" aria-labelledby="dropdownClientes">
                                 <li><a class="dropdown-item" href="agregarCliente.html">Agregar</a></li>
                                 <li><a class="dropdown-item" href="consultarClientes.html">Consultar/Actualizar</a></li>
-    
+
                             </ul>
                         </div>
                         <!-- Perfil y Cerrar sesión -->
@@ -87,7 +89,8 @@
                             </a>
                             <ul class="dropdown-menu aria-labelledby=" dropdownUser1">
                                 <li><a class="dropdown-item" href="verPerfil.html">Perfil</a></li>
-                                <li><a class="dropdown-item" href="cambiarContrasenaPerfil.html">Cambiar contraseña</a></li>
+                                <li><a class="dropdown-item" href="cambiarContrasenaPerfil.html">Cambiar contraseña</a>
+                                </li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
@@ -128,20 +131,21 @@
                     </div>
                     <div class="mb-3">
                         <label for="usuarioRol" class="form-label">Tipo de usuario</label>
-                        <select class="form-control" id="usuarioRol" name="rol">
+                        <select class="form-control" id="usuarioRol" name="rol" required>
                             <option value="">Seleccionar usuario</option>
+                            <option value="5">Administrador</option>
+                            <option value="6">Gerente</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="contrasena" class="form-label">Nueva Contraseña</label>
-                        <input type="text" class="form-control" id="contrasena" placeholder="••••••••" required><i
-                            class="fas fa-eye-slash eye" id="toggleNewPassword"
-                            onclick="togglePassword('contrasena')"></i>
+                        <label for="contrasena" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="contrasena" placeholder="••••••••" required><i
+                            class="fas fa-eye-slash eye" id="contrasena" onclick="togglePassword('contrasena')"></i>
                     </div>
                     <div class="mb-3">
                         <label for="confirmarContra" class="form-label">Confirmar Contraseña</label>
-                        <input type="text" class="form-control" id="confirmarContra" placeholder="••••••••" required><i
-                            class="fas fa-eye-slash eye" id="toggleNewPassword"
+                        <input type="password" class="form-control" id="confirmarContra" placeholder="••••••••"
+                            required><i class="fas fa-eye-slash eye" id="confirmarContra"
                             onclick="togglePassword('confirmarContra')"></i>
                     </div>
                     <button type="submit" class="btn btn-primary">Agregar usuario</button>
@@ -224,14 +228,12 @@
                 if (!verificarContrasenas()) {
                     return;
                 }
-
-
                 const nombre = document.getElementById("nombreUsuario").value;
                 const apellidos = document.getElementById("apellidosUsuario").value;
                 const correo = document.getElementById("correoUsuario").value;
                 const telefono = document.getElementById("telefonoUsuario").value;
                 const contrasena = document.getElementById("contrasena").value;
-                const rol = document.getElementById("usuarioRol").value
+                const role = document.getElementById("usuarioRol").value;
 
                 const data = {
                     nombre: nombre,
@@ -239,15 +241,23 @@
                     correo: correo,
                     telefono: telefono,
                     contrasena: contrasena,
-                    rol: rol
+                    role: role
                 };
 
-                fetch('http://localhost:8080/usuarios/save', {
+                fetch(`http://localhost:8080/usuarios/save`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
                     },
-                    body: JSON.stringify(data),
+                    body: JSON.stringify({
+                        nombre: nombre,
+                        apellidos: apellidos,
+                        correo: correo,
+                        telefono: telefono,
+                        contrasena: contrasena,
+                        role: role
+                    })
                 })
                     .then(response => {
                         if (!response.ok) {
