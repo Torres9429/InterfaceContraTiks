@@ -149,8 +149,8 @@
                         <label for="usuarioRol" class="form-label">Tipo de usuario</label>
                         <select class="form-control" id="usuarioRol" name="rol" required>
                             <option value="">Seleccionar usuario</option>
-                            <option value="5">Administrador</option>
-                            <option value="6">Gerente</option>
+                            <option value="ROLE_ADMIN_ACCESS">Administrador</option>
+                            <option value="ROLE_GERENTE_ACCESS">Gerente</option>
                         </select>
                     </div>
                     <div class="mb-3 position-relative">
@@ -271,7 +271,7 @@
                         correo: correo,
                         telefono: telefono,
                         contrasena: contrasena,
-                        role: role
+                        role: document.getElementById("usuarioRol").selectedOptions[0].value
                     })
                 })
                     .then(response => {
