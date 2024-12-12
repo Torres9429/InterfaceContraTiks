@@ -276,12 +276,13 @@
                     };
                     console.log('Token JWT:', localStorage.getItem('jwt'));
                     console.log('Datos actualizados:', datosActualizados);
+                    console.log('JWT:', jwt);
 
                     fetch('http://localhost:8080/usuarios/update', {
                         method: 'PUT', 
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                            'Authorization': `Bearer ${jwt}`,
                         },
                         body: JSON.stringify(datosActualizados)
                     })
